@@ -62,6 +62,7 @@
           <i class='fa-regular fa-circle'></i>
               <span>" . htmlspecialchars($row['name']) . "</span>
               <a href='../delete.php ?id=".$row['id']."'><i class='fa fa-times'></i></a>
+              <a  href='../edit.php?id=$row[id]' ><i class='fa-solid fa-marker'></i></a>
           </div>
          
           ";
