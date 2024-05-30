@@ -3,89 +3,72 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../style.css">
 <title>Todo List</title>
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    background-size: cover;
-    background-image: url('../images/Download wallpaper 1366x768 green, octopus, drawing tablet, laptop hd background.jpeg');
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    color: white;
-  }
-
-  .container {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 15px;
-    padding: 20px;
-    width: 300px;
-    text-align: center;
-  }
-
-  .title {
-    font-size: 24px;
-    margin-bottom: 20px;
-  }
-
-  .input-field {
-    display: flex;
-    justify-content: center;
-    margin-bottom: 20px;
-  }
-
-  .input-field input {
-    padding: 10px;
-    border: none;
-    border-radius: 5px 0 0 5px;
-    width: 70%;
-  }
-
-  .input-field button {
-    padding: 10px;
-    border: none;
-    background: #4CAF50;
-    color: white;
-    border-radius: 0 5px 5px 0;
-    cursor: pointer;
-  }
-
-  .buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-bottom: 20px;
-  }
-
-  .buttons button {
-    padding: 10px;
-    border: none;
-    background: #4CAF50;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    flex: 1;
-    margin: 0 5px;
-  }
 
 
-</style>
 </head>
 <body>
+
 <div class="container">
   <div class="title">Todo List</div>
-  <div class="input-field">
-    <input type="text" placeholder="Add a new task">
-    <button>+</button>
-  </div>
+  <form method="post" action="">
+    <div class="input-field">
+      <input type="text" name="task" placeholder="Add a new task" required>
+      <button type="submit" name="addTask">+</button>
+    </div>
+  </form>
   <div class="buttons">
     <button>Complete</button>
     <button>Incomplete</button>
     <button>Delete All</button>
   </div>
+  <div class="task-list">
+    <?php
+      $servername = "localhost";
+      $username = "root";
+      $password = "";
+      $database = "todolist";
 
+      $connection = new mysqli($servername, $username, $password, $database);
+
+      if ($connection->connect_error) {
+          die("Connection failed: " . $connection->connect_error);
+      }
+
+      if (isset($_POST['addTask'])) {
+          $task = htmlspecialchars($_POST['task']);
+          $sql = "INSERT INTO task (name) VALUES ('$task')";
+          if ($connection->query($sql) === TRUE) {
+              header("Location: " . $_SERVER['PHP_SELF']);
+              exit();
+          } else {
+              echo "Error: " . $sql . "<br>" . $connection->error;
+          }
+      }
+
+      $sql = "SELECT * FROM task";
+      $result = $connection->query($sql);
+
+      if (!$result) {
+          die("Invalid query: " . $connection->error);
+      }
+
+      while ($row = $result->fetch_assoc()) {
+          echo "
+          <div class='task-item'>
+          <i class='fa-regular fa-circle'></i>
+              <span>" . htmlspecialchars($row['name']) . "</span>
+              <i class='fa fa-times' href='./delete.php$row[id]'></i>
+          </div>
+         
+          ";
+      }
+
+      $connection->close();
+    ?>
+  </div>
 </div>
+<script src="https://kit.fontawesome.com/523d8fe978.js" crossorigin="anonymous"></script>
 </body>
 </html>
