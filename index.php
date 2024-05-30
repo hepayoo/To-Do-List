@@ -21,7 +21,9 @@
   <div class="buttons">
     <button>Complete</button>
     <button>Incomplete</button>
-    <button>Delete All</button>
+    <form method="post" action="../delete-all.php">
+        <button type="submit" name="deleteAll">Delete All</button>
+    </form>
   </div>
   <div class="task-list">
     <?php
@@ -59,7 +61,7 @@
           <div class='task-item'>
           <i class='fa-regular fa-circle'></i>
               <span>" . htmlspecialchars($row['name']) . "</span>
-              <i class='fa fa-times' href='./delete.php$row[id]'></i>
+              <a href='../delete.php ?id=".$row['id']."'><i class='fa fa-times'></i></a>
           </div>
          
           ";
